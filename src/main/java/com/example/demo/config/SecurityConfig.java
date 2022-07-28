@@ -22,7 +22,7 @@ import java.util.*;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
+  
 	@Autowired
 	CustomUserDetailService customuserdetailService;
 

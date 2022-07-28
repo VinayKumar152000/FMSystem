@@ -14,7 +14,7 @@ import java.util.function.Function;
 //contains all method helps in performing operations with jwt operations
 
 @Service
-public class JwtUtil {
+public class JwtUtil {  
 
 	private String SECRET_KEY = "secret";
 

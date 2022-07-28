@@ -12,7 +12,7 @@ import com.example.demo.services.JwtInterceptorService;
 public class JwtInterceptorConfig extends WebMvcConfigurerAdapter{
 
 	@Autowired
-	JwtInterceptorService jwtInterceptorService;
+	JwtInterceptorService jwtInterceptorService;  
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

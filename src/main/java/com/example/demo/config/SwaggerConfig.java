@@ -23,7 +23,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
 		return new ApiInfo("FMSystem Rest Apis", "APIs for FMSystem", "1.0", "Terms of service", null, "License of API",
 				"API license URL", Collections.emptyList());
 	}
-
+  
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
