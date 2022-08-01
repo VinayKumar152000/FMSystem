@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //				.antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("admin", "user")
 //				.antMatchers(HttpMethod.POST, "/api/**").hasAnyRole("admin", "user")
 //				.antMatchers(HttpMethod.PUT, "/api/**").hasRole("admin").antMatchers(HttpMethod.DELETE, "/api/**")
-//				.hasRole("admin").anyRequest().authenticated()
+//				.hasRole("admin")
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.exceptionHandling();
 

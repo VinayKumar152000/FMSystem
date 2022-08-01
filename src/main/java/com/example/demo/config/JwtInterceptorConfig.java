@@ -9,13 +9,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.example.demo.services.JwtInterceptorService;
 
 @Component
-public class JwtInterceptorConfig extends WebMvcConfigurerAdapter{
+public class JwtInterceptorConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
-	JwtInterceptorService jwtInterceptorService;  
+	JwtInterceptorService jwtInterceptorService;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(jwtInterceptorService).excludePathPatterns("/api/token").addPathPatterns("/**");
+
 	}
 }

@@ -1,10 +1,15 @@
 package com.example.demo.services;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,10 +32,8 @@ public class JwtInterceptorService implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		System.out.println("pre handling");
-		
 		String requestTokenHeader = request.getHeader("Authorization");
+		String method = request.getMethod();
 
 		String username = null;
 		String jwtToken = null;
@@ -45,14 +48,29 @@ public class JwtInterceptorService implements HandlerInterceptor {
 				e.printStackTrace();
 			}
 
-			System.out.println("pre handling");
 			// fine
 			UserDetails userdetails = this.customuserdetailService.loadUserByUsername(username);
 			System.out.println(userdetails.getAuthorities());
-			 System.out.println(SecurityContextHolder.getContext().getAuthentication());
-			 
+			Collection<? extends GrantedAuthority> roles = userdetails.getAuthorities();
+
+//
+//			roles.stream().forEach(s -> System.out.println(s));
+			List<? extends GrantedAuthority> list = roles.stream()
+					.filter(role -> role.getAuthority().equals("ROLE_admin")).collect(Collectors.toList());
+
+			System.out.println(list.size());
+
+			if (method.equals("POST") && request.getRequestURI().equals("api/roles") && list.size() == 0) {
+				response.sendError(401, "Unauthorized");
+				return false;
+			}
+			if ((method.equals("DELETE") || method.equals("PUT")) && list.size() == 0) {
+				response.sendError(401, "Unauthorized");
+				return false;
+			}
+
 			if (username != null && SecurityContextHolder.getContext().getAuthentication() != null) {
-            System.out.println("Woorking");
+//				System.out.println("Woorking");
 
 				UsernamePasswordAuthenticationToken usernamepasswordauthenticationToken = new UsernamePasswordAuthenticationToken(
 						userdetails, null, userdetails.getAuthorities());
@@ -61,9 +79,8 @@ public class JwtInterceptorService implements HandlerInterceptor {
 						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
 				SecurityContextHolder.getContext().setAuthentication(usernamepasswordauthenticationToken);
-				 System.out.println(SecurityContextHolder.getContext().getAuthentication());
-			}
-			else {
+				System.out.println(SecurityContextHolder.getContext().getAuthentication());
+			} else {
 				throw new UsernameNotFoundException("User Not Found");
 			}
 
